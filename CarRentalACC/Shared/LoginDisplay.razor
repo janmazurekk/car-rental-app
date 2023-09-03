@@ -1,0 +1,30 @@
+﻿@inject NavigationManager Navigation
+
+<AuthorizeView>
+    <Authorized>
+        <MudLink Color="MudBlazor.Color.Inherit" Href="Identity/Account/Manage">
+            <MudChip Color="MudBlazor.Color.Primary">
+                Moje dane
+            </MudChip>
+        </MudLink>
+        <form method="post" action="Identity/Account/Logout">
+            <button type="submit">
+                <MudChip Color="MudBlazor.Color.Primary">
+                    Wyloguj
+                </MudChip>
+            </button>
+        </form>
+    </Authorized>
+    <NotAuthorized>
+        <MudLink Color="MudBlazor.Color.Inherit" Href="Identity/Account/Login">
+            <MudChip Color="MudBlazor.Color.Primary">
+                Logowanie
+            </MudChip>
+        </MudLink>
+        <MudLink Color="MudBlazor.Color.Inherit" Href="Identity/Account/Register">
+            <MudChip Color="MudBlazor.Color.Primary">
+                Rejestracja
+            </MudChip>
+        </MudLink>
+    </NotAuthorized>
+</AuthorizeView>

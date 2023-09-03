@@ -1,0 +1,27 @@
+﻿<MudNavMenu Class="py-3">
+    <MudNavGroup Title="Galeria" Expanded="true" Icon="@Icons.Material.Filled.Home">
+        <MudNavLink Href="/" Icon="@Icons.Material.Filled.DirectionsCar" Match=NavLinkMatch.All>Wszystkie</MudNavLink>
+        <MudNavLink Href="/sportowe" Icon="@Icons.Material.Filled.SportsMotorsports">Sportowe</MudNavLink>
+        <MudNavLink Href="/elektryczne" Icon="@Icons.Material.Filled.ElectricCar">Elektryczne</MudNavLink>
+        <MudNavLink Href="/rodzinne" Icon="@Icons.Material.Filled.ChildCare">Rodzinne</MudNavLink>
+        <MudNavLink Href="/luksusowe" Icon="@Icons.Material.Filled.Diamond">Luksusowe</MudNavLink>
+    </MudNavGroup>
+    <AuthorizeView>
+        <Authorized>
+            <MudNavLink Href="/myreservations" Icon="@Icons.Material.Filled.List">Moje Rezerwacje</MudNavLink>
+        </Authorized>
+        <NotAuthorized>
+        </NotAuthorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="Administrators">
+        <Authorized>
+            <MudNavGroup Title="Panel administratora" Expanded="true" Icon="@Icons.Material.Filled.Settings">
+                <MudNavLink Href="cars" Icon="@Icons.Material.Filled.DirectionsCar">Samochody</MudNavLink>
+                <MudNavLink Href="reservations" Icon="@Icons.Material.Filled.ManageSearch">Rezerwacje</MudNavLink>
+                <MudNavLink Href="users" Icon="@Icons.Material.Filled.People">Użytkownicy</MudNavLink>
+            </MudNavGroup>
+        </Authorized>
+        <NotAuthorized>
+        </NotAuthorized>
+    </AuthorizeView>
+</MudNavMenu>

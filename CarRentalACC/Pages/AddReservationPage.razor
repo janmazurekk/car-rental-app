@@ -1,0 +1,267 @@
+﻿@page "/addreservation/{carId}"
+
+@using CarRentalACC.Data
+@using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Globalization
+@attribute [Authorize]
+@inject IReservationsService reservationsService
+@inject ICarsService carsService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISnackbar Snackbar
+
+<PageTitle>Rezerwacja</PageTitle>
+
+<MudTabs Rounded="true" ApplyEffectsToContainer="true" KeepPanelsAlive="true">
+    <MudTabPanel Text="Wybierz daty">
+        <MudCard>
+            <MudDateRangePicker MinDate="DateTime.Now.AddDays(1)" MaxDate="DateTime.Now.AddYears(1).Date" PickerVariant="PickerVariant.Static" Label="Basic range picker" DateRangeChanged="OnDateRangeChange" IsDateDisabledFunc="@((DateTime dt) => IsDateDisabled(dt))" Culture="@CultureInfo.GetCultureInfo("pl")" />
+        </MudCard>
+    </MudTabPanel>
+    <MudTabPanel Text="Wybierz godziny" Disabled="@UserChooseDate">
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h6">Wybierz godzine odbioru</MudText>
+                    </MudCardHeader>
+                    <MudTimePicker PickerVariant="PickerVariant.Static" Label="24 hours" TimeChanged="OnTimeStartChange" />
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h6">Wybierz godzine zdania</MudText>
+                    </MudCardHeader>
+                    <MudTimePicker PickerVariant="PickerVariant.Static" Label="24 hours" TimeChanged="OnTimeEndChange" />
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="Wybierz miejsce" Disabled="@UserChooseTime">
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h6">Wybierz miejsce odbioru</MudText>
+                    </MudCardHeader>
+                    <div>
+                        <MudCardContent>
+                            <div class="form-group">
+                                <input id="search-box1" type="text" class="form-control" placeholder="Wpisz adres" style="z-index: 20000;">
+                            </div>
+                        </MudCardContent>
+                        <div id="map1" style="width: 100%; height: 300px;"></div>
+                    </div>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h6">Wybierz miejsce zdania</MudText>
+                    </MudCardHeader>
+                    <div>
+                        <MudCardContent>
+                            <div class="form-group">
+                                <input id="search-box2" type="text" class="form-control" placeholder="Wpisz adres">
+                            </div>
+                        </MudCardContent>
+                        <div id="map2" style="width: 100%; height: 300px;"></div>
+                    </div>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="Podsumowanie" OnClick="Summary" Disabled="@UserChooseLocaton">
+        <MudGrid>
+            <MudItem xs="12" sm="4">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Wybrany samochód</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardMedia Image="@($"/images/{currentCar.Image.FilePath}")" Height="200" />
+                    <MudCardContent>
+                        <MudText Typo="Typo.h5">@currentCar.Model</MudText>
+                        <MudText Typo="Typo.body2">@currentCar.Description</MudText>
+                        <MudText Typo="Typo.subtitle2"><b>Cena:</b> @currentCar.Price zł (doba)</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" sm="8">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Szczegóły rezerwacji</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudText Typo="Typo.body1"><b>Koszt całkowity:</b> @rentCost zł</MudText>
+                        <MudText Typo="Typo.body1"><b>Data rozpoczęcia:</b> @startDate.ToString("yyyy-MM-dd HH:mm")</MudText>
+                        <MudText Typo="Typo.body1"><b>Data zakończenia:</b> @endDate.ToString("yyyy-MM-dd HH:mm")</MudText>
+                        <MudText Typo="Typo.body1"><b>Miejsce odbioru:</b> @startLatitude @startLongitude</MudText>
+                        <MudText Typo="Typo.body1"><b>Miejsce odbioru:</b> @endLatitude @endLongitude</MudText>
+
+                        <MudText Class="pt-3 pb-2" Typo="Typo.subtitle1">Twoje dane</MudText>
+
+                        <MudText Typo="Typo.body1"><b>Imię:</b> @CurrentUser.FirstName</MudText>
+                        <MudText Typo="Typo.body1"><b>Nazwisko:</b> @CurrentUser.LastName</MudText>
+                        <MudText Typo="Typo.body1"><b>Email:</b> @CurrentUser.Email</MudText>
+                        <MudText Typo="Typo.body1"><b>Email:</b> @CurrentUser.PhoneNumber</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+</MudTabs>
+
+<br />
+
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@((e) => AddReservation())" Disabled="@UserChooseSummary" FullWidth="true">Rezerwuj</MudButton>
+
+
+@code {
+    [Parameter]
+    public string carId { get; set; }
+
+    private List<DateTime> reservationDates;
+    private Car currentCar;
+    private float rentCost;
+    private DateTime startDate;
+    private DateTime endDate;
+    private Boolean UserChooseDate = true;
+    private Boolean UserChooseTime = true;
+    private Boolean UserChooseLocaton = true;
+    private Boolean UserChooseSummary = true;
+    private ApplicationUser CurrentUser { get; set; }
+
+    private static double startLatitude;
+    private static double startLongitude;
+    private static double endLatitude;
+    private static double endLongitude;
+
+    private static AddReservationPage _app;
+
+    public AddReservationPage()
+    {
+        _app = this;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentCar = await carsService.GetCarById(new Guid(carId));
+        reservationDates = await reservationsService.GetReservationDatesForCar(currentCar);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            CurrentUser = await UserManager.GetUserAsync(user);
+        }
+    }
+
+    private async Task AddReservation()
+    {
+        await reservationsService.AddReservation(startDate, endDate, startLatitude, startLongitude, endLatitude, endLongitude, CurrentUser, rentCost, currentCar);
+
+        reservationDates = await reservationsService.GetReservationDatesForCar(currentCar);
+        StateHasChanged();
+
+        Snackbar.Add("Dokonano rezerwacji!");
+
+        Navigation.NavigateTo("/myreservations");
+    }
+
+    private void OnDateRangeChange(DateRange? choosenRange)
+    {
+        startDate = choosenRange.Start ?? DateTime.MinValue;
+        endDate = choosenRange.End ?? DateTime.MinValue;
+        UserChooseDate = false;
+    }
+
+    private void OnTimeStartChange(TimeSpan? choosenTime)
+    {
+        startDate = startDate.Date + choosenTime.Value;
+        if (endDate.TimeOfDay != TimeSpan.Zero)
+        {
+            UserChooseTime = false;
+
+            if (startDate != null && endDate != null)
+            {
+                TimeSpan dateRangeDifference = endDate - startDate;
+                int numberOfDays = (int)Math.Ceiling(dateRangeDifference.TotalDays);
+
+                rentCost = currentCar.Price * numberOfDays;
+            }
+        }
+    }
+
+    private void OnTimeEndChange(TimeSpan? choosenTime)
+    {
+        endDate = endDate.Date + choosenTime.Value;
+        if (startDate.TimeOfDay != TimeSpan.Zero)
+        {
+            UserChooseTime = false;
+
+            if (startDate != null && endDate != null)
+            {
+                TimeSpan dateRangeDifference = endDate - startDate;
+                int numberOfDays = (int)Math.Ceiling(dateRangeDifference.TotalDays);
+
+                rentCost = currentCar.Price * numberOfDays;
+            }
+        }
+    }
+
+    private void Summary()
+    {
+        UserChooseSummary = false;
+    }
+
+    private bool IsDateDisabled(DateTime dt)
+    {
+        return reservationDates.Any(reservationDate => reservationDate.Date == dt.Date);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initMap");
+        }
+    }
+
+    [JSInvokable]
+    public static void SetCoordinatesMap1(double latitude, double longitude)
+    {
+        startLatitude = latitude;
+        startLongitude = longitude;
+        _app.StateHasChanged();
+
+        if (endLatitude != 0)
+        {
+            _app.UserChooseLocaton = false;
+            _app.StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public static void SetCoordinatesMap2(double latitude, double longitude)
+    {
+        endLatitude = latitude;
+        endLongitude = longitude;
+        _app.StateHasChanged();
+
+        if (startLongitude != 0)
+        {
+            _app.UserChooseLocaton = false;
+            _app.StateHasChanged();
+        }
+    }
+}
+

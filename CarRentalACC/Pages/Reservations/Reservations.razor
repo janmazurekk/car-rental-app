@@ -1,0 +1,150 @@
+﻿@page "/reservations"
+@using CarRentalACC.Data
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrators")]
+@inject IJSRuntime JSRuntime
+@inject IReservationsService reservationsService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<PageTitle>Rezerwacje</PageTitle>
+
+
+<MudTable Items="@reservations" Filter="new Func<Reservation,bool>(FilterFunc1)">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Rezerwacje</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Szukaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Data rozpoczęcia</MudTh>
+        <MudTh>Data zakończenia</MudTh>
+        <MudTh>Data utworzenia</MudTh>
+        <MudTh>Miejsca</MudTh>
+        <MudTh>Klient</MudTh>
+        <MudTh>Koszt</MudTh>
+        <MudTh>Samochód</MudTh>
+        <MudTh>Akcje</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">
+            <MudTooltip Text="@context.Id.ToString()" Arrow="true" Placement="Placement.Bottom">
+                <MudIconButton @onclick="() => CopyTextToClipboard(context.Id.ToString())" Icon="@Icons.Material.Filled.CopyAll" />
+            </MudTooltip>
+        </MudTd>
+        <MudTd DataLabel="Data rozpoczęcia">@context.StartDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd DataLabel="Data zakończenia">@context.EndDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd DataLabel="Data utworzenia">@context.CreationDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd DataLabel="Miejsca">
+            <MudIconButton OnClick="@((e) => ShowMaps(context))" Icon="@Icons.Material.Filled.Map" />
+        </MudTd>
+            <MudTd DataLabel="Klient">
+                <MudTooltip>
+                    <ChildContent>
+                        <MudButton @onclick="() => CopyTextToClipboard(context.Car.Id.ToString())">@context.Author.Email</MudButton>
+                    </ChildContent>
+                    <TooltipContent>
+                        <MudText Typo="Typo.body1"><b>Imię:</b> @context.Author.FirstName</MudText>
+                        <MudText Typo="Typo.body1"><b>Nazwisko:</b> @context.Author.LastName</MudText>
+                        <MudText Typo="Typo.body1"><b>Numer telefonu:</b> @context.Author.PhoneNumber</MudText>
+                        <MudText Typo="Typo.body2"><b>Id:</b> @context.Author.Id</MudText>
+                    </TooltipContent>
+                </MudTooltip>
+            </MudTd>
+            <MudTd DataLabel="Koszt">@context.Cost zł</MudTd>
+            <MudTd DataLabel="Samochód">
+                <MudTooltip Text="@context.Car.Id.ToString()" Arrow="true" Placement="Placement.Bottom">
+                    <MudButton @onclick="() => CopyTextToClipboard(context.Car.Id.ToString())">@context.Car.Model</MudButton>
+                </MudTooltip>
+            </MudTd>
+            <MudTd DataLabel="Akcje">
+                <MudButton OnClick="@((e) => RemoveReservation(context.Id))" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ml-2" StartIcon="@Icons.Material.Filled.Delete">Usuń</MudButton>
+            </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private string searchString1 = "";
+    private Reservation selectedItem1 = null;
+    private HashSet<Reservation> selectedItems = new HashSet<Reservation>();
+
+    private IEnumerable<Reservation> reservations = new List<Reservation>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        reservations = await reservationsService.GetReservations();
+    }
+
+    private bool FilterFunc1(Reservation reservation) => FilterFunc(reservation, searchString1);
+
+    private bool FilterFunc(Reservation reservation, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+
+        if (reservation.Id.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (reservation.StartDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (reservation.EndDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (reservation.Author.ToString().IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
+            return true;
+
+        if (reservation.Cost.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (reservation.Car.Id.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    private async void RemoveReservation(Guid reservationId)
+    {
+        var parameters = new DialogParameters<Confirm>();
+        parameters.Add(x => x.ContentText, "Czy na pewno chcesz usunąć tę rezerwację?");
+        parameters.Add(x => x.ButtonText, "Usuń");
+        parameters.Add(x => x.Color, Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var diagResult = DialogService.Show<Confirm>("Usuń", parameters, options);
+
+        var result = await diagResult.Result;
+
+        if (!result.Cancelled)
+        {
+            // Usunięcie rezerwacji z bazy danych
+            await reservationsService.RemoveReservation(reservationId);
+
+            // Odświeżenie listy rezerwacji po usunięciu
+            reservations = reservations.Where(e => e.Id != reservationId).ToList();
+
+            //reservations = await reservationsService.GetReservations();
+            StateHasChanged(); // Spowoduje ponowne przeliczenie komponentu i dynamiczne wyświetlenie zaktualizowanej listy
+            Snackbar.Add("Usunięto rezerwację");
+        }
+    }
+
+    private async Task CopyTextToClipboard(String textToCopy)
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", textToCopy);
+        Snackbar.Add("Skopiowano do schowka!");
+    }
+
+    private async void ShowMaps(Reservation reservation)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var parameters = new DialogParameters<ShowMapsDialog> { { x => x.reservation, reservation } };
+        var diagResult = DialogService.Show<ShowMapsDialog>("Edytuj samochód", parameters, options);
+    }
+}
+

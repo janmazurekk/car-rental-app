@@ -1,0 +1,152 @@
+﻿@using CarRentalACC.Data
+@using System.IO
+@using FluentValidation
+@attribute [Authorize(Roles = "Administrators")]
+@inject ICarsService carsService
+@inject IImagesService imagesService
+@inject IWebHostEnvironment env
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudForm Model="@model" @ref="@form" Validation="@(ValidationRules.ValidateValue)" ValidationDelay="0">
+    <MudDialog>
+        <DialogContent>
+            <MudCardContent>
+                <MudTextField @bind-Value="model.carModel"
+                              For="@(() => model.carModel)"
+                              Immediate="true"
+                              Label="Model" />
+                <MudSelect @bind-Value="model.category" T="string" Label="Kategoria" AnchorOrigin="Origin.BottomCenter" Required="true">
+                    <MudSelectItem Value="@("Sportowe")" />
+                    <MudSelectItem Value="@("Elektryczne")" />
+                    <MudSelectItem Value="@("Rodzinne")" />
+                    <MudSelectItem Value="@("Luksusowe")" />
+                </MudSelect>
+                <MudTextField @bind-Value="model.description"
+                              For="@(() => model.description)"
+                              Immediate="true"
+                              Label="Opis"
+                              T="string"
+                              Variant="Variant.Text" Lines="5" />
+                <MudTextField @bind-Value="model.price"
+                              For="@(() => model.price)"
+                              Immediate="true"
+                              Label="Cena za dobę"
+                              Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+
+                <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" For="@(() => model.File)" @bind-Files="model.File" OnFilesChanged="UploadFiles">
+                    <ButtonTemplate>
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.CloudUpload"
+                                   for="@context">
+                            @fileButtonName
+                        </MudButton>
+                    </ButtonTemplate>
+                </MudFileUpload>
+            </MudCardContent>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Anuluj</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@(async () => await Submit())" Disabled="@ImageUploadStatus">Dodaj</MudButton>
+        </DialogActions>
+    </MudDialog>
+</MudForm>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private Image currentImage;
+    private Car currentCar;
+    private Image choosenImage;
+    private string fileButtonName = "Wybierz zdjęcie";
+
+    private MudForm form;
+    private FileModel model = new();
+    private FileModelFluentValidator ValidationRules = new();
+
+    private Boolean ImageUploadStatus = true;
+
+    private async void UploadFiles(InputFileChangeEventArgs e)
+    {
+        var selectedFile = e.File;
+        long maxFileSize = 1024L * 1024L * 1024L * 2L;
+        choosenImage = await imagesService.AddImage(selectedFile.Name);
+        var path = Path.Combine(env.WebRootPath, "images", choosenImage.FilePath);
+
+        await using FileStream fs = new(path, FileMode.Create);
+        await selectedFile.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+        fileButtonName = selectedFile.Name;
+
+        ImageUploadStatus = false;
+        StateHasChanged();
+    }
+
+    private async Task Submit()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            Snackbar.Add("Dodano samochód!");
+            AddCar();
+        }
+    }
+
+    private async Task Cancel()
+    {
+        if (choosenImage != null)
+        {
+            var path = Path.Combine(env.WebRootPath, "images", choosenImage.FilePath);
+            File.Delete(path);
+            await imagesService.RemoveImage(choosenImage.Id);
+        }
+
+        MudDialog.Cancel();
+    }
+
+    public class FileModel
+    {
+        public string carModel;
+        public string category;
+        public string description;
+        public float price;
+        public IBrowserFile File { get; set; }
+    }
+
+    public class FileModelFluentValidator : AbstractValidator<FileModel>
+    {
+        public FileModelFluentValidator()
+        {
+            RuleFor(x => x.carModel)
+                .NotEmpty();
+            RuleFor(x => x.category)
+                .NotEmpty();
+            RuleFor(x => x.description)
+                .NotEmpty();
+            RuleFor(x => x.price)
+                .GreaterThan(0)
+                .NotEmpty();
+            RuleFor(x => x.File)
+            .NotEmpty();
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<FileModel>.CreateWithOptions((FileModel)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+
+    private async Task AddCar()
+    {
+        currentCar = await carsService.AddCar(model.carModel, model.category, model.description, model.price, choosenImage);
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

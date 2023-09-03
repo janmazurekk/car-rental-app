@@ -1,0 +1,69 @@
+﻿@using CarRentalACC.Data
+@attribute [Authorize]
+@inject IJSRuntime JSRuntime
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Wybrane miejsca
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudCard Outlined="true">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Odbioru</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudText Typo="Typo.body1"><b>Latitude:</b> @reservation.StartLatitude</MudText>
+                        <MudText Typo="Typo.body1"><b>Longitude:</b> @reservation.StartLongitude</MudText>
+                        <br />
+                        <div id="map1" style="width: 100%; height: 300px;"></div>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudCard Outlined="true">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Zdania</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudText Typo="Typo.body1"><b>Latitude:</b> @reservation.EndLatitude</MudText>
+                        <MudText Typo="Typo.body1"><b>Longitude:</b> @reservation.EndLongitude</MudText>
+                        <br />
+                        <div id="map2" style="width: 100%; height: 300px;"></div>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+  
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Reservation reservation { get; set; } = new Reservation();
+
+    void Close() => MudDialog.Close(DialogResult.Ok(true));
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("displayLocations", reservation.StartLatitude, reservation.StartLongitude, reservation.EndLatitude, reservation.EndLongitude);
+        }
+    }
+
+}
+

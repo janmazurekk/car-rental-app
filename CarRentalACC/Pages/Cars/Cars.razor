@@ -1,0 +1,123 @@
+﻿@page "/cars"
+@using CarRentalACC.Data
+@attribute [Authorize(Roles = "Administrators")]
+@inject IJSRuntime JSRuntime
+@inject ICarsService carsService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+
+<PageTitle>Samochody</PageTitle>
+
+<MudButton @onclick="AddCar" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">
+    Dodaj samochód
+</MudButton>
+
+
+<br />
+<br />
+
+
+<MudTable Items="@cars">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Samochody</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Zdjęcie</MudTh>
+        <MudTh>Model</MudTh>
+        <MudTh>Kategoria</MudTh>
+        <MudTh>Opis</MudTh>
+        <MudTh>Cena za dobe</MudTh>
+        <MudTh>Akcje</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">
+            <MudTooltip Text="@context.Id.ToString()" Arrow="true" Placement="Placement.Bottom">
+                <MudIconButton @onclick="() => CopyTextToClipboard(context.Id.ToString())" Icon="@Icons.Material.Filled.CopyAll" />
+            </MudTooltip>
+        </MudTd>
+        <MudTd DataLabel="Zdjęcie">
+            <img src="/images/@context.Image.FilePath" style="max-height: 30px">
+        </MudTd>
+        <MudTd DataLabel="Model">@context.Model</MudTd>
+        <MudTd DataLabel="Kategoria">@context.Category</MudTd>
+        <MudTd DataLabel="Opis">@context.Description</MudTd>
+        <MudTd DataLabel="Cena za dobe">@context.Price zł</MudTd>
+        <MudTd DataLabel="Akcje">
+            <MudButton OnClick="@((e) => EditCar(@context.Id))" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small">
+                Edytuj
+            </MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small" @onclick="() => RemoveCar(context.Id)" Class="ml-2">Usuń</MudButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+@code {
+    List<Car> cars;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cars = await carsService.GetCars();
+    }
+
+    private async Task RemoveCar(Guid carId)
+    {
+        var parameters = new DialogParameters<Confirm>();
+        parameters.Add(x => x.ContentText, "Czy na pewno chcesz usunąć to auto?");
+        parameters.Add(x => x.ButtonText, "Usuń");
+        parameters.Add(x => x.Color, Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var diagResult = DialogService.Show<Confirm>("Usuń", parameters, options);
+
+        var result = await diagResult.Result;
+
+        if (!result.Cancelled)
+        {
+            await carsService.RemoveCar(carId);
+
+            cars = await carsService.GetCars();
+            StateHasChanged();
+
+            Snackbar.Add("Usunięto samochód!");
+        }
+    }
+
+    private async void AddCar()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        var diagResult = DialogService.Show<AddCarDialog>("Dodaj samochód", options);
+
+        var result = await diagResult.Result;
+
+        if (!result.Cancelled)
+        {
+            cars = await carsService.GetCars();
+            StateHasChanged();
+        }
+    }
+
+    private async void EditCar(Guid carid)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        var parameters = new DialogParameters<EditCarDialog> { { x => x.carid, carid } };
+        var diagResult = DialogService.Show<EditCarDialog>("Edytuj samochód", parameters, options);
+
+        var result = await diagResult.Result;
+
+        if (!result.Cancelled)
+        {
+            cars = await carsService.GetCars();
+            StateHasChanged();
+        }
+    }
+
+    private async Task CopyTextToClipboard(String textToCopy)
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", textToCopy);
+        Snackbar.Add("Skopiowano do schowka!");
+    }
+}

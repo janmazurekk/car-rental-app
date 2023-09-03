@@ -1,0 +1,5 @@
+<ListOfTaskListEntry>
+  <TaskListEntry file="" description="Dodawania zdjec w car" priority="High" completed="True" />
+  <TaskListEntry file="" description="Kalendarza w rezerwacjach" completed="True" />
+  <TaskListEntry file="" description="Ogarnac logowanie uzytkownikow" priority="Low" completed="True" />
+</ListOfTaskListEntry>

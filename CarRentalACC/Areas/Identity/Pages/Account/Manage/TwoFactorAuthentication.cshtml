@@ -1,0 +1,70 @@
+﻿@page
+@using Microsoft.AspNetCore.Http.Features
+@model TwoFactorAuthenticationModel
+@{
+    ViewData["Title"] = "Weryfikacja dwuetapowa";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<h3>@ViewData["Title"]</h3>
+@{
+    var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
+    @if (consentFeature?.CanTrack ?? true)
+    {
+        @if (Model.Is2faEnabled)
+        {
+            if (Model.RecoveryCodesLeft == 0)
+            {
+                <div class="alert alert-danger">
+                    <strong>Nie masz żadnych kluczy zapasowych.</strong>
+                    <p>Musisz <a asp-page="./GenerateRecoveryCodes">wygenerować nowy zestaw kluczy zapasowych</a> przed logowaniem z wykorzystaniem kluczy zapasowych.</p>
+                </div>
+            }
+            else if (Model.RecoveryCodesLeft == 1)
+            {
+                <div class="alert alert-danger">
+                    <strong>Został tobie jeden klucz zapasowy.</strong>
+                    <p>Możesz <a asp-page="./GenerateRecoveryCodes">wygenerować nowy zestaw kluczy zapasowych</a>.</p>
+                </div>
+            }
+            else if (Model.RecoveryCodesLeft <= 3)
+            {
+                <div class="alert alert-warning">
+                    <strong>Zostało tobie @Model.RecoveryCodesLeft kluczy zapasowych.</strong>
+                    <p>Powinineś <a asp-page="./GenerateRecoveryCodes">wygenerować nowy zestaw kluczy zapasowych</a>.</p>
+                </div>
+            }
+
+            if (Model.IsMachineRemembered)
+            {
+                <form method="post" style="display: inline-block">
+                    <button type="submit" class="btn btn-primary">Zapomnij tej przeglądarki</button>
+                </form>
+            }
+            <a asp-page="./Disable2fa" class="btn btn-primary">Wyłącz 2FA</a>
+            <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Resetuj kody zapasowe</a>
+        }
+
+        @if (!Model.HasAuthenticator)
+        {
+            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Dodaj aplikacja utwierzytelniającą</a>
+        }
+        else
+        {
+            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Dodaj aplikacja utwierzytelniającą</a><br /><br />
+            <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Resetuj aplikacja utwierzytelniającą</a>
+        }
+    }
+    else
+    {
+        <div class="alert alert-danger">
+            <strong>Privacy and cookie policy have not been accepted.</strong>
+            <p>You must accept the policy before you can enable two factor authentication.</p>
+        </div>
+    }
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

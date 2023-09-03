@@ -1,0 +1,88 @@
+﻿@page "/"
+@page "/{CurrentCategory}"
+@using CarRentalACC.Data
+@using System.Globalization
+@inject ICarsService carsService
+@inject IDialogService DialogService
+
+@if (CurrentCategory != null)
+{
+    <PageTitle>FastRental - @CurrentCategory</PageTitle>
+}
+else
+{
+    <PageTitle>FastRental</PageTitle>
+}
+
+<MudExpansionPanels>
+    <MudExpansionPanel Text="Pokaż dostępne samochody w wybranym terminie" MaxHeight="150">
+        <MudDateRangePicker MinDate="DateTime.Now.AddDays(1)" MaxDate="DateTime.Now.AddYears(1).Date" Label="Wybierz termin" DateRangeChanged="OnDateRangeChange" Culture="@CultureInfo.GetCultureInfo("pl")" />
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+<br />
+
+@if (cars == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <MudGrid>
+        @foreach (var car in cars)
+        {
+            <MudItem xs="12" sm="4">
+                <MudCard Outlined="true">
+                    <MudCardMedia Image="@($"/images/{car.Image.FilePath}")" Height="200" />
+                    <MudCardContent>
+                        <MudText Typo="Typo.h5">@car.Model</MudText>
+                        <MudText Typo="Typo.body2">@car.Description</MudText>
+                        <MudText Typo="Typo.subtitle2"><b>Cena:</b> @car.Price zł (doba)</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <AuthorizeView>
+                            <Authorized>
+                                <MudButton Href="@($"/addreservation/{car.Id}")" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Rezerwuj</MudButton>
+                            </Authorized>
+                            <NotAuthorized>
+                                <MudButton Disabled="true" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Rezerwuj (tylko dla zalogowanych)</MudButton>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    [Parameter]
+    public string CurrentCategory { get; set; }
+
+    private MudDateRangePicker _picker;
+    private DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(5).Date);
+
+    List<Car> cars;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cars = await carsService.GetCars(CurrentCategory);
+    }
+
+    protected override async void OnParametersSet()
+    {
+        cars = await carsService.GetCars(CurrentCategory);
+        StateHasChanged();
+    }
+
+    async void OnDateRangeChange(DateRange? choosenRange)
+    {
+        cars = await carsService.GetCars(CurrentCategory, choosenRange.Start, choosenRange.End);
+        StateHasChanged();
+    }
+
+    private async Task RemoveReservation(Guid carId)
+    {
+        await carsService.RemoveCar(carId);
+    }
+}

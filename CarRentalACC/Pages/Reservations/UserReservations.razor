@@ -1,0 +1,120 @@
+﻿@page "/myreservations"
+
+@using CarRentalACC.Data
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize]
+@inject IJSRuntime JSRuntime
+@inject IReservationsService reservationsService
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+
+<PageTitle>Moje rezerwacje</PageTitle>
+
+
+<MudTable Items="@reservations">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Moje rezerwacje</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Data rozpoczęcia</MudTh>
+        <MudTh>Data zakonczenia</MudTh>
+        <MudTh>Data utworzenia</MudTh>
+        <MudTh>Miejsca</MudTh>
+        <MudTh>Koszt</MudTh>
+        <MudTh>Samochód</MudTh>
+        <MudTh>Akcje</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">
+            <MudTooltip Text="@context.Id.ToString()" Arrow="true" Placement="Placement.Bottom">
+                <MudIconButton @onclick="() => CopyTextToClipboard(context.Id.ToString())" Icon="@Icons.Material.Filled.CopyAll" />
+            </MudTooltip>
+        </MudTd>
+        <MudTd DataLabel="Data rozpoczęcia">@context.StartDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd DataLabel="Data zakończenia">@context.EndDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd DataLabel="Data utworzenia">@context.CreationDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd DataLabel="Miejsca">
+            <MudIconButton OnClick="@((e) => ShowMaps(context))" Icon="@Icons.Material.Filled.Map" />
+        </MudTd>
+        <MudTd DataLabel="Koszt">@context.Cost zł</MudTd>
+        <MudTd DataLabel="Samochód">
+            <MudTooltip Text="@context.Car.Id.ToString()" Arrow="true" Placement="Placement.Bottom">
+                <MudButton @onclick="() => CopyTextToClipboard(context.Car.Id.ToString())">@context.Car.Model</MudButton>
+            </MudTooltip>
+        </MudTd>
+        <MudTd DataLabel="Akcje">
+            <MudButton OnClick="@((e) => RemoveReservation(context.Id))" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small">Usuń</MudButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private Reservation selectedItem1 = null;
+    private HashSet<Reservation> selectedItems = new HashSet<Reservation>();
+
+    private IEnumerable<Reservation> reservations = new List<Reservation>();
+
+    private ApplicationUser CurrentUser { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            CurrentUser = await UserManager.GetUserAsync(user);
+        }
+
+        reservations = await reservationsService.GetReservationsForUser(CurrentUser);
+    }
+
+
+    private async void RemoveReservation(Guid reservationId)
+    {
+        var parameters = new DialogParameters<Confirm>();
+        parameters.Add(x => x.ContentText, "Czy na pewno chcesz usunąć tę rezerwację?");
+        parameters.Add(x => x.ButtonText, "Usuń");
+        parameters.Add(x => x.Color, Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var diagResult = DialogService.Show<Confirm>("Usuń", parameters, options);
+
+        var result = await diagResult.Result;
+
+        if (!result.Cancelled)
+        {
+            // Usunięcie rezerwacji z bazy danych
+            await reservationsService.RemoveReservation(reservationId);
+
+            // Odświeżenie listy rezerwacji po usunięciu
+            reservations = reservations.Where(e => e.Id != reservationId).ToList();
+
+            //reservations = await reservationsService.GetReservations();
+            StateHasChanged(); // Spowoduje ponowne przeliczenie komponentu i dynamiczne wyświetlenie zaktualizowanej listy
+            Snackbar.Add("Usunięto rezerwację");
+        }
+    }
+
+    private async Task CopyTextToClipboard(String textToCopy)
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", textToCopy);
+        Snackbar.Add("Skopiowano do schowka!");
+    }
+
+    private async void ShowMaps(Reservation reservation)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var parameters = new DialogParameters<ShowMapsDialog> { { x => x.reservation, reservation } };
+        var diagResult = DialogService.Show<ShowMapsDialog>("Edytuj samochód", parameters, options);
+    }
+}
+

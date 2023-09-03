@@ -1,0 +1,136 @@
+﻿@using CarRentalACC.Data
+@using FluentValidation
+@attribute [Authorize(Roles = "Administrators")]
+@inject IUserService usersService
+@inject IWebHostEnvironment env
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudForm Model="@model" @ref="@form" Validation="@(ValidationRules.ValidateValue)" ValidationDelay="0">
+    <MudDialog>
+        <DialogContent>
+            <MudCardContent>
+                <MudTextField @bind-Value="model.firstName"
+                              For="@(() => model.firstName)"
+                              Immediate="true"
+                              Label="Imię" />
+                <MudTextField @bind-Value="model.lastName"
+                              For="@(() => model.lastName)"
+                              Immediate="true"
+                              Label="Nazwisko" />
+                <MudTextField @bind-Value="model.email"
+                              For="@(() => model.email)"
+                              Immediate="true"
+                              Label="Email" />
+                <MudTextField @bind-Value="model.phoneNumber"
+                              For="@(() => model.phoneNumber)"
+                              Immediate="true"
+                              Label="Numer telefonu" />
+                <MudSelect @bind-Value="model.role"
+                           For="@(() => model.role)"
+                           T="string" Label="Rola" AnchorOrigin="Origin.BottomCenter" Required="true">
+                    <MudSelectItem Value="@("Użytkownik")" />
+                    <MudSelectItem Value="@("Administrator")" />
+                </MudSelect>
+            </MudCardContent>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Anuluj</MudButton>
+            <MudButton Color="Color.Primary" OnClick="Submit">Zapisz zmiany</MudButton>
+        </DialogActions>
+    </MudDialog>
+</MudForm>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public String userId { get; set; }
+
+    List<ApplicationUser> users;
+
+    private ApplicationUser currentUser;
+
+    private MudForm form;
+    private FileModel model = new();
+    private FileModelFluentValidator ValidationRules = new();
+
+    public class FileModel
+    {
+        public string email;
+        public string phoneNumber;
+        public string firstName;
+        public string lastName;
+        public string role;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUser = await usersService.GetUserAsync(userId);
+        model.email = currentUser.Email;
+        model.phoneNumber = currentUser.PhoneNumber;
+        model.firstName = currentUser.FirstName;
+        model.lastName = currentUser.LastName;
+
+        if (IsUserInAdministratorsRole(currentUser.Id))
+        {
+            model.role = "Administrator";
+        }
+        else
+        {
+            model.role = "Użytkownik";
+        }
+    }
+
+    private async Task Submit()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            Snackbar.Add("Edytowano użytkownika!");
+            EditUser();
+        }
+    }
+
+    private async Task Cancel()
+    {
+
+        MudDialog.Cancel();
+    }
+
+    private async Task EditUser()
+    {
+        await usersService.EditUser(currentUser.Id, model.role, model.email, model.phoneNumber, model.firstName, model.lastName);
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    public class FileModelFluentValidator : AbstractValidator<FileModel>
+    {
+        public FileModelFluentValidator()
+        {
+            RuleFor(x => x.email)
+                .NotEmpty();
+            RuleFor(x => x.phoneNumber)
+    .NotEmpty();
+            RuleFor(x => x.firstName)
+            .NotEmpty();
+            RuleFor(x => x.lastName)
+            .NotEmpty();
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<FileModel>.CreateWithOptions((FileModel)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+
+    private bool IsUserInAdministratorsRole(string userId)
+    {
+        return usersService.IsUserInAdministratorsRoleAsync(userId).Result;
+    }
+}

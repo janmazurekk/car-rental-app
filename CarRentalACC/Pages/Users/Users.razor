@@ -1,0 +1,158 @@
+﻿@page "/users"
+@using CarRentalACC.Data
+@inject IJSRuntime JSRuntime
+@inject ISnackbar Snackbar
+@inject IUserService userService
+@inject IDialogService DialogService
+
+<AuthorizeView Roles="Administrators">
+    <Authorized>
+        <MudTable Items="@users" Filter="new Func<ApplicationUser,bool>(FilterFunc1)">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Użytkownicy</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString1" Placeholder="Szukaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Id</MudTh>
+                <MudTh>Imię</MudTh>
+                <MudTh>Nazwisko</MudTh>
+                <MudTh>Email</MudTh>
+                <MudTh>Numer telefonu</MudTh>
+                <MudTh>2FA</MudTh>
+                <MudTh>Rola</MudTh>
+                <MudTh>Akcje</MudTh>
+            </HeaderContent>
+            <RowTemplate Context="user">
+                <MudTd DataLabel="Id">
+                    <MudTooltip Text="@user.Id.ToString()" Arrow="true" Placement="Placement.Bottom">
+                        <MudIconButton @onclick="() => CopyTextToClipboard(user.Id.ToString())" Icon="@Icons.Material.Filled.CopyAll" />
+                    </MudTooltip>
+                </MudTd>
+                <MudTd DataLabel="Imię">@user.FirstName</MudTd>
+                <MudTd DataLabel="Nazwisko">@user.LastName</MudTd>
+                <MudTd DataLabel="Email">@user.Email</MudTd>
+                <MudTd DataLabel="Numer telefonu">@user.PhoneNumber</MudTd>
+                <MudTd DataLabel="2FA">
+                    @if (user.TwoFactorEnabled)
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Check"></MudIcon>
+                    }
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Clear"></MudIcon>
+
+                    }
+                </MudTd>
+                <MudTd DataLabel="Rola">
+                    @if (IsUserInAdministratorsRole(user.Id))
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.Shield">Administrator</MudButton>
+
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Filled.People">Użytkownik</MudButton>
+                    }
+
+                </MudTd>
+                <MudTd DataLabel="Akcje">
+                    <MudButton OnClick="@((e) => EditUser(user.Id))" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small">Edytuj</MudButton>
+                    <MudButton OnClick="@((e) => RemoveUser(user.Id))" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small" Class="ml-2">Usuń</MudButton>
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </Authorized>
+    <NotAuthorized>
+        <p>You're not logged in.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private string searchString1 = "";
+
+    private IEnumerable<ApplicationUser> users = new List<ApplicationUser>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await userService.GetUsersAsync();
+    }
+
+    private bool FilterFunc1(ApplicationUser users) => FilterFunc(users, searchString1);
+
+    private bool FilterFunc(ApplicationUser users, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+
+        if (users.Id.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (users.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (users.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (users.Email.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
+            return true;
+
+        if (users.PhoneNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    private async Task CopyTextToClipboard(String textToCopy)
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", textToCopy);
+        Snackbar.Add("Skopiowano do schowka!");
+    }
+
+    private async void EditUser(String userId)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        var parameters = new DialogParameters<EditUserDialog> { { x => x.userId, userId } };
+        var diagResult = DialogService.Show<EditUserDialog>("Edytuj dane użytkownika", parameters, options);
+
+        var result = await diagResult.Result;
+
+        if (!result.Cancelled)
+        {
+            users = await userService.GetUsersAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async void RemoveUser(String userId)
+    {
+        var parameters = new DialogParameters<Confirm>();
+        parameters.Add(x => x.ContentText, "Czy na pewno chcesz usunąć tego użytkownika?");
+        parameters.Add(x => x.ButtonText, "Usuń");
+        parameters.Add(x => x.Color, Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var diagResult = DialogService.Show<Confirm>("Usuń", parameters, options);
+
+        var result = await diagResult.Result;
+
+        if (!result.Cancelled)
+        {
+            await userService.DeleteUserAsync(userId);
+
+            users = await userService.GetUsersAsync();
+            StateHasChanged(); 
+            Snackbar.Add("Usunięto użytkownika");
+        }
+    }
+
+    private bool IsUserInAdministratorsRole(string userId)
+    {
+        return userService.IsUserInAdministratorsRoleAsync(userId).Result;
+    }
+
+}
