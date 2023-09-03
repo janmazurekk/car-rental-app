@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "js7NFJlHn9Q/WFG4fWTKQ4ozky5UKM/2ermTv2miyts=",
+  "Hash": "f2amX2uoTfMRRQsSeN3i3CVZ0rDquJP5DVpfcs9Df0c=",
   "Source": "CarRentalACC",
   "BasePath": "_content/CarRentalACC",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "CarRentalACC/wwwroot",
       "Source": "CarRentalACC",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "Pattern": "**"
     }
@@ -1088,10 +1088,10 @@
       "OriginalItemSpec": "/Users/janmazurek/.nuget/packages/mudblazor/6.7.0/staticwebassets/MudBlazor.min.js"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/obj/Debug/net7.0/scopedcss/bundle/CarRentalACC.styles.css",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/obj/Debug/net7.0/scopedcss/bundle/CarRentalACC.styles.css",
       "SourceId": "CarRentalACC",
       "SourceType": "Computed",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/obj/Debug/net7.0/scopedcss/bundle/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/obj/Debug/net7.0/scopedcss/bundle/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "CarRentalACC.styles.css",
       "AssetKind": "All",
@@ -1102,13 +1102,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/obj/Debug/net7.0/scopedcss/bundle/CarRentalACC.styles.css"
+      "OriginalItemSpec": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/obj/Debug/net7.0/scopedcss/bundle/CarRentalACC.styles.css"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/obj/Debug/net7.0/scopedcss/projectbundle/CarRentalACC.bundle.scp.css",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/obj/Debug/net7.0/scopedcss/projectbundle/CarRentalACC.bundle.scp.css",
       "SourceId": "CarRentalACC",
       "SourceType": "Computed",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/obj/Debug/net7.0/scopedcss/projectbundle/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/obj/Debug/net7.0/scopedcss/projectbundle/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "CarRentalACC.bundle.scp.css",
       "AssetKind": "All",
@@ -1119,13 +1119,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/obj/Debug/net7.0/scopedcss/projectbundle/CarRentalACC.bundle.scp.css"
+      "OriginalItemSpec": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/obj/Debug/net7.0/scopedcss/projectbundle/CarRentalACC.bundle.scp.css"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/.DS_Store",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/.DS_Store",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": ".DS_Store",
       "AssetKind": "All",
@@ -1139,10 +1139,10 @@
       "OriginalItemSpec": "wwwroot/.DS_Store"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/bootstrap/bootstrap.min.css",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/bootstrap/bootstrap.min.css",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -1156,10 +1156,10 @@
       "OriginalItemSpec": "wwwroot/css/bootstrap/bootstrap.min.css"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/bootstrap/bootstrap.min.css.map",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/bootstrap/bootstrap.min.css.map",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -1173,10 +1173,10 @@
       "OriginalItemSpec": "wwwroot/css/bootstrap/bootstrap.min.css.map"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/FONT-LICENSE",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/FONT-LICENSE",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/FONT-LICENSE",
       "AssetKind": "All",
@@ -1190,10 +1190,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/FONT-LICENSE"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/font/css/open-iconic-bootstrap.min.css",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/font/css/open-iconic-bootstrap.min.css",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/font/css/open-iconic-bootstrap.min.css",
       "AssetKind": "All",
@@ -1207,10 +1207,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/font/css/open-iconic-bootstrap.min.css"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.eot",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.eot",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.eot",
       "AssetKind": "All",
@@ -1224,10 +1224,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/font/fonts/open-iconic.eot"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.otf",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.otf",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.otf",
       "AssetKind": "All",
@@ -1241,10 +1241,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/font/fonts/open-iconic.otf"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.svg",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.svg",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.svg",
       "AssetKind": "All",
@@ -1258,10 +1258,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/font/fonts/open-iconic.svg"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.ttf",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.ttf",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.ttf",
       "AssetKind": "All",
@@ -1275,10 +1275,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/font/fonts/open-iconic.ttf"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.woff",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/font/fonts/open-iconic.woff",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.woff",
       "AssetKind": "All",
@@ -1292,10 +1292,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/font/fonts/open-iconic.woff"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/ICON-LICENSE",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/ICON-LICENSE",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/ICON-LICENSE",
       "AssetKind": "All",
@@ -1309,10 +1309,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/ICON-LICENSE"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/open-iconic/README.md",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/open-iconic/README.md",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/open-iconic/README.md",
       "AssetKind": "All",
@@ -1326,10 +1326,10 @@
       "OriginalItemSpec": "wwwroot/css/open-iconic/README.md"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/css/site.css",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/css/site.css",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "css/site.css",
       "AssetKind": "All",
@@ -1343,10 +1343,10 @@
       "OriginalItemSpec": "wwwroot/css/site.css"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/favicon.png",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/favicon.png",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "favicon.png",
       "AssetKind": "All",
@@ -1360,10 +1360,10 @@
       "OriginalItemSpec": "wwwroot/favicon.png"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/GoogleMaps.js",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/GoogleMaps.js",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "GoogleMaps.js",
       "AssetKind": "All",
@@ -1377,10 +1377,10 @@
       "OriginalItemSpec": "wwwroot/GoogleMaps.js"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/images/.DS_Store",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/images/.DS_Store",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "images/.DS_Store",
       "AssetKind": "All",
@@ -1394,10 +1394,10 @@
       "OriginalItemSpec": "wwwroot/images/.DS_Store"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/images/11e53c50-d7ca-4414-b162-56f7427a6a0a.png",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/images/11e53c50-d7ca-4414-b162-56f7427a6a0a.png",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "images/11e53c50-d7ca-4414-b162-56f7427a6a0a.png",
       "AssetKind": "All",
@@ -1411,10 +1411,10 @@
       "OriginalItemSpec": "wwwroot/images/11e53c50-d7ca-4414-b162-56f7427a6a0a.png"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/js/qr.js",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/js/qr.js",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "js/qr.js",
       "AssetKind": "All",
@@ -1428,10 +1428,10 @@
       "OriginalItemSpec": "wwwroot/js/qr.js"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/lib/.DS_Store",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/lib/.DS_Store",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "lib/.DS_Store",
       "AssetKind": "All",
@@ -1445,10 +1445,10 @@
       "OriginalItemSpec": "wwwroot/lib/.DS_Store"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/lib/jquery.min.js",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/lib/jquery.min.js",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "lib/jquery.min.js",
       "AssetKind": "All",
@@ -1462,10 +1462,10 @@
       "OriginalItemSpec": "wwwroot/lib/jquery.min.js"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/lib/qrcode.js",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/lib/qrcode.js",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "lib/qrcode.js",
       "AssetKind": "All",
@@ -1479,10 +1479,10 @@
       "OriginalItemSpec": "wwwroot/lib/qrcode.js"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/lib/qrcode.min.js",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/lib/qrcode.min.js",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "lib/qrcode.min.js",
       "AssetKind": "All",
@@ -1496,10 +1496,10 @@
       "OriginalItemSpec": "wwwroot/lib/qrcode.min.js"
     },
     {
-      "Identity": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/Screenshot 2023-05-06 at 13.02.42.png",
+      "Identity": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/Screenshot 2023-05-06 at 13.02.42.png",
       "SourceId": "CarRentalACC",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/janmazurek/Projects/CarRentalACC - identity/CarRentalACC/wwwroot/",
+      "ContentRoot": "/Users/janmazurek/Projects/car-rental-app/CarRentalACC/wwwroot/",
       "BasePath": "_content/CarRentalACC",
       "RelativePath": "Screenshot 2023-05-06 at 13.02.42.png",
       "AssetKind": "All",
